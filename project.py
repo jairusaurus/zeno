@@ -1,21 +1,27 @@
 from ollama import chat
-from ollama import ChatResponse
 
 
+#main function
 def main():
     question = input("Ask anything. ")
-    print (generate_response(question))
+    generate_response(question)
 
+#generates response in chunks
 def generate_response(question):
-    response: ChatResponse = chat(model='llama3.1', messages=[
-    {
+    # variable for 'messages' for chat function
+    messages = [
+       {
         'role': 'user',
         'content': question,
-    },
-    ])
-    return (response['message']['content'])
-# or access fields directly from the response object
-#print(response.message.content)
+       },
+    ]
+    
+    #response variable is assigned to chat function of ollama
+    response = chat(model='zeno', messages=messages, stream = True)
+    
+    #using loop to print chunks of 
+    for part in response:
+        print (part.message.content, end='', flush=True)
 
 if __name__ == "__main__":
     main ()
